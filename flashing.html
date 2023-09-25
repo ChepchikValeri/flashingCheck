@@ -20,24 +20,45 @@
     </style>
 </head>
 <body>
+    <div id="fpsCounter" style="position: fixed; top: 10px; left: 10px; color: red; font-size: 24px;">FPS: 0</div>
     <div id="flashDiv"></div>
 
     <script>
-        let flashDiv = document.getElementById("flashDiv");
-        let isBlack = true;
+      let flashDiv = document.getElementById("flashDiv");
+let fpsCounter = document.getElementById("fpsCounter");
+let isBlack = true;
 
-        function toggleColor() {
-            if (isBlack) {
-                flashDiv.style.backgroundColor = "white";
-            } else {
-                flashDiv.style.backgroundColor = "black";
-            }
-            isBlack = !isBlack;
+let lastTime = 0;
+let frameCount = 0;
 
-            requestAnimationFrame(toggleColor);
-        }
+function toggleColor(timestamp) {
+    // Calculate FPS
+    if (!lastTime) {
+        lastTime = timestamp;
+    }
 
-        requestAnimationFrame(toggleColor);
+    frameCount++;
+
+    let deltaTime = timestamp - lastTime;
+
+    if (deltaTime >= 1000) {  // Every second update the FPS counter
+        fpsCounter.innerHTML = "FPS: " + frameCount;
+        frameCount = 0;
+        lastTime = timestamp;
+    }
+
+    // Toggle color
+    if (isBlack) {
+        flashDiv.style.backgroundColor = "white";
+    } else {
+        flashDiv.style.backgroundColor = "black";
+    }
+    isBlack = !isBlack;
+
+    requestAnimationFrame(toggleColor);
+}
+
+requestAnimationFrame(toggleColor);
 
     </script>
 </body>
